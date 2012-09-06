@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content">
+    <ImageView android:id="@+id/color_image"
+        android:contentDescription="@string/contacts_photo"
+        android:layout_width="80dip" 
+        android:layout_height="80dip" />
+
+    <TextView
+        android:id="@+id/color_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/color_image"
+        android:ellipsize="marquee"
+        android:paddingTop="3dip"
+        android:singleLine="true"
+        android:textSize="28dip"
+        android:textStyle="bold" />
+
+    <TextView android:id="@+id/color_text"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/color_image"
+        android:layout_below="@id/color_title"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:textSize="22dip"
+        android:paddingBottom="3dip" />
+</RelativeLayout>
