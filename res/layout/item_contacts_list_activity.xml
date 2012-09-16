@@ -2,10 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content">
-    <ImageView android:id="@+id/color_image"
+    <ImageView android:id="@+id/contacts_photo"
         android:contentDescription="@string/contacts_photo"
         android:layout_width="80dip" 
-        android:layout_height="80dip" />
+        android:layout_height="80dip" 
+        android:src="@drawable/ic_default_photo"/>
 
     <TextView
         android:id="@+id/color_title"
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/color_image"
+        android:layout_toRightOf="@id/contacts_photo"
         android:ellipsize="marquee"
         android:paddingTop="3dip"
         android:singleLine="true"
@@ -23,7 +24,7 @@
     <TextView android:id="@+id/color_text"
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/color_image"
+        android:layout_toRightOf="@id/contacts_photo"
         android:layout_below="@id/color_title"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -31,4 +32,6 @@
         android:ellipsize="marquee"
         android:textSize="22dip"
         android:paddingBottom="3dip" />
+    
+    
 </RelativeLayout>

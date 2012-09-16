@@ -76,7 +76,7 @@ public abstract class FloatTextListActivity extends ListActivity implements List
         
         LayoutInflater inflate = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         
-        mDialogText = (TextView) inflate.inflate(R.layout.listview_float_text, null);
+        mDialogText = (TextView) inflate.inflate(R.layout.item_float_text_list_activity, null);
         mDialogText.setVisibility(View.INVISIBLE);
         
         mHandler.post(new Runnable() {

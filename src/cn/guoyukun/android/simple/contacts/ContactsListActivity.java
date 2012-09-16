@@ -13,9 +13,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.Contacts.People;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -29,7 +32,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import cn.guoyukun.android.common.FloatTextListActivity;
 
-public class MainActivity extends FloatTextListActivity {
+public class ContactsListActivity extends FloatTextListActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,9 +40,10 @@ public class MainActivity extends FloatTextListActivity {
 		return true;
 	}
 
-	Context mContext = null;
-
-	/** 获取库Phon表字段 **/
+	private Context mContext = null;
+	private static final String TAG="ContactsListActivity";
+	
+	/** 获取库Phone表字段 **/
 	private static final String[] PHONES_PROJECTION = new String[] {
 			Phone.DISPLAY_NAME, Phone.NUMBER, Photo.PHOTO_ID, Phone.CONTACT_ID };
 
@@ -54,6 +58,8 @@ public class MainActivity extends FloatTextListActivity {
 
 	/** 联系人的ID **/
 	private static final int PHONES_CONTACT_ID_INDEX = 3;
+	/** 联系人ID **/
+	private ArrayList<Long> mContactsId = new ArrayList<Long>();
 
 	/** 联系人名称 **/
 	private ArrayList<String> mContactsName = new ArrayList<String>();
@@ -83,9 +89,17 @@ public class MainActivity extends FloatTextListActivity {
 			public void onItemClick(AdapterView<?> adapterView, View view,
 					int position, long id) {
 				// 调用系统方法拨打电话
-				Intent dialIntent = new Intent(Intent.ACTION_CALL, Uri
-						.parse("tel:" + mContactsNumber.get(position)));
-				startActivity(dialIntent);
+				//Intent dialIntent = new Intent(Intent.ACTION_CALL, Uri
+				//		.parse("tel:" + mContactsNumber.get(position)));
+				//startActivity(dialIntent);
+				Uri uri = getContactUri(position);
+				Log.v(TAG,uri.toString());
+	            final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+	            Bitmap photo = mContactsPhonto.get(position);
+	            if(photo!=null){
+	            		intent.putExtra("photo", photo );
+	            }
+	            startActivity(intent);
 			}
 		});
 
@@ -108,7 +122,7 @@ public class MainActivity extends FloatTextListActivity {
 				// 当手机号码为空的或者为空字段 跳过当前循环
 				if (TextUtils.isEmpty(phoneNumber))
 					continue;
-
+				
 				// 得到联系人名称
 				String contactName = phoneCursor
 						.getString(PHONES_DISPLAY_NAME_INDEX);
@@ -122,21 +136,27 @@ public class MainActivity extends FloatTextListActivity {
 				// 得到联系人头像Bitamp
 				Bitmap contactPhoto = null;
 
-				// photoid 大于0 表示联系人有头像 如果没有给此人设置头像则给他一个默认的
+				// photoid 大于0 表示联系人有头像 
+				// 如果没有给此人设置头像则放入null，绘制时使用静态变量（一个默认的）
 				if (photoid > 0) {
 					Uri uri = ContentUris.withAppendedId(
 							ContactsContract.Contacts.CONTENT_URI, contactid);
 					InputStream input = ContactsContract.Contacts
 							.openContactPhotoInputStream(resolver, uri);
 					contactPhoto = BitmapFactory.decodeStream(input);
-				} else {
+				} 
+				/*
+				else {
 					// TODO：默认头像
 					contactPhoto = BitmapFactory.decodeResource(getResources(),
-							R.drawable.ic_launcher);
+							R.drawable.ic_default_photo);
 				}
-
+*/
+				
+				mContactsId.add(contactid);
 				mContactsName.add(contactName);
-				mContactsNumber.add(phoneNumber);
+				//去除分割符，否则可能出现 1-234-123-1412 这g样的号码格式
+				mContactsNumber.add(PhoneNumberUtils.stripSeparators(phoneNumber));
 				mContactsPhonto.add(contactPhoto);
 			}
 
@@ -145,6 +165,7 @@ public class MainActivity extends FloatTextListActivity {
 	}
 
 	/** 得到手机SIM卡联系人人信息 **/
+	@SuppressWarnings("unused")
 	private void getSIMContacts() {
 		ContentResolver resolver = mContext.getContentResolver();
 		// 获取Sims卡联系人
@@ -165,7 +186,6 @@ public class MainActivity extends FloatTextListActivity {
 						.getString(PHONES_DISPLAY_NAME_INDEX);
 
 				// Sim卡中没有联系人头像
-
 				mContactsName.add(contactName);
 				mContactsNumber.add(phoneNumber);
 			}
@@ -173,7 +193,20 @@ public class MainActivity extends FloatTextListActivity {
 			phoneCursor.close();
 		}
 	}
+	 private Uri getContactUri(int position) {
+	        if (position == ListView.INVALID_POSITION) {
+	            throw new IllegalArgumentException("Position not in list bounds");
+	        }
+/*
+	        final Cursor cursor = (Cursor)adapter.getItem(position);
+	        if (cursor == null) {
+	            return null;
+	        }
+	        */
+	        final long personId = mContactsId.get(position);
+	        return ContentUris.withAppendedId(People.CONTENT_URI, personId);
 
+	 }
 	class MyListAdapter extends BaseAdapter {
 		public MyListAdapter(Context context) {
 			mContext = context;
@@ -198,13 +231,13 @@ public class MainActivity extends FloatTextListActivity {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			ImageView iamge = null;
+			ImageView image = null;
 			TextView title = null;
 			TextView text = null;
 			if (convertView == null || position < mContactsNumber.size()) {
 				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.colorlist, null);
-				iamge = (ImageView) convertView.findViewById(R.id.color_image);
+						R.layout.item_contacts_list_activity, null);
+				image = (ImageView) convertView.findViewById(R.id.contacts_photo);
 				title = (TextView) convertView.findViewById(R.id.color_title);
 				text = (TextView) convertView.findViewById(R.id.color_text);
 			}
@@ -213,7 +246,13 @@ public class MainActivity extends FloatTextListActivity {
 			// 绘制联系人号码
 			text.setText(mContactsNumber.get(position));
 			// 绘制联系人头像
-			iamge.setImageBitmap(mContactsPhonto.get(position));
+			Bitmap photo = mContactsPhonto.get(position);
+			if(photo==null){
+				//image.setImageBitmap(CONTACTS_DEFAULT_PHOTO);
+				image.setImageResource(R.drawable.ic_default_photo);
+			}else{
+				image.setImageBitmap(mContactsPhonto.get(position));
+			}
 			return convertView;
 		}
 	}
