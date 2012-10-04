@@ -1,10 +1,12 @@
 <resources>
 
     <string name="app_name">SimpleContacts</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="demo_short">demo!</string>
+    <string name="demo_long">demo very very long!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="contacts_photo">联系人头像</string>
+    <string name="title_activity_contacts_list">通讯录</string>
     <string name="title_activity_view_contact">联系人信息</string>
-
+  	<string name="title_activity_call_logs">通话记录</string>
+    
 </resources>

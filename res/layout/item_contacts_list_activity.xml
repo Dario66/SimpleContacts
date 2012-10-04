@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>  
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" 
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@android:color/black">
     <ImageView android:id="@+id/contacts_photo"
         android:contentDescription="@string/contacts_photo"
         android:layout_width="80dip" 
@@ -18,6 +19,7 @@
         android:ellipsize="marquee"
         android:paddingTop="3dip"
         android:singleLine="true"
+        android:textColor="@android:color/white"
         android:textSize="28dip"
         android:textStyle="bold" />
 
@@ -31,6 +33,7 @@
         android:singleLine="true"
         android:ellipsize="marquee"
         android:textSize="22dip"
+        android:textColor="@android:color/white"
         android:paddingBottom="3dip" />
     
     
