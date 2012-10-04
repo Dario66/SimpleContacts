@@ -12,10 +12,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Contacts.People;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
+import android.provider.ContactsContract.Contacts;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
@@ -204,7 +204,7 @@ public class ContactsListActivity extends FloatTextListActivity {
 	        }
 	        */
 	        final long personId = mContactsId.get(position);
-	        return ContentUris.withAppendedId(People.CONTENT_URI, personId);
+	        return ContentUris.withAppendedId(Contacts.CONTENT_URI/*  People.CONTENT_URI*/, personId);
 
 	 }
 	class MyListAdapter extends BaseAdapter {
