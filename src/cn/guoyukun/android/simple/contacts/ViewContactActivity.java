@@ -35,7 +35,7 @@ public class ViewContactActivity extends Activity {
 
 		final Intent intent = getIntent();
 		final Uri data = intent.getData();
-		//头像
+		// 头像
 		final Bitmap photo = (Bitmap) intent.getParcelableExtra("photo");
 		if (photo != null) {
 
@@ -198,5 +198,4 @@ public class ViewContactActivity extends Activity {
 		}
 		phones.close();
 	}
-
 }

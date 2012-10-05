@@ -13,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CallLogsActivity extends ListActivity {
 	private static final String TAG = "CallLogsActivity";
-	private static final String[] CALL_TYPE_NAME={"","打入","打出","未接"};
+	private static final String[] CALL_TYPE_NAME={"接听","打出","未接"};
+	private static final int[] CALL_TYPE_BGCOLOR={Color.BLUE,Color.GREEN,Color.RED};
+	private static final int[] CALL_TYPE_FGCOLOR={Color.YELLOW,Color.RED,Color.WHITE};
+	//private static final String[] CALL_TYPE_NAME={"","接听","打出","未接"};
 	//private static final String[] PROJECTION = new String[] {CallLog.Calls.NUMBER,CallLog.Calls.CACHED_NAME,CallLog.Calls.TYPE, CallLog.Calls.DATE,}; 
 	
 	private Cursor cursor = null;
@@ -37,7 +39,7 @@ public class CallLogsActivity extends ListActivity {
 	
     public class CallLogCursorAdapter extends CursorAdapter{
 		private LayoutInflater mInflater;
-    	private final SimpleDateFormat sfd = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    	private final SimpleDateFormat sfd = new SimpleDateFormat("MM-dd hh:mm:ss");
     	
 		
         public CallLogCursorAdapter(Context context, Cursor c) {
@@ -69,8 +71,12 @@ public class CallLogsActivity extends ListActivity {
              TextView durationTxt = (TextView)view.findViewById(R.id.duration);
              
              String name = cursor.getString(cursor.getColumnIndex(CallLog.Calls.CACHED_NAME));
+             if(name==null || name.trim().length()==0){
+            	 name="未知号码";
+             }
+             
              String number = cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER));
-             Integer epoch = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DATE));
+           //  Integer epoch = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DATE));
              Integer duration = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.DURATION));
              Integer callType = cursor.getInt(cursor.getColumnIndex(CallLog.Calls.TYPE));
              
@@ -80,9 +86,10 @@ public class CallLogsActivity extends ListActivity {
              
              
              nameTxt.setText( name );
-             numberTxt.setText(number+":"+time);
-             durationTxt.setText(""+duration);
-             epochTxt.setText(""+epoch);
+             numberTxt.setText(number/*+":"+time*/);
+             durationTxt.setText(duration + "秒");
+             epochTxt.setText(""+time);
+             /*
              int color = 0;
              
              switch( callType ){
@@ -99,10 +106,13 @@ public class CallLogsActivity extends ListActivity {
 	            	 break;
 	             }
              }
+             */
              if(callType>0 && callType<4){
-            	 callTypeImg.setText(CALL_TYPE_NAME[callType]);
+            	 callTypeImg.setText(CALL_TYPE_NAME[callType-1]);
+            	 callTypeImg.setBackgroundColor(CALL_TYPE_BGCOLOR[callType-1]);
+            	 callTypeImg.setTextColor(CALL_TYPE_FGCOLOR[callType-1]);
              }
-             callTypeImg.setBackgroundColor(color);
+             
 	    }         
          
     }
