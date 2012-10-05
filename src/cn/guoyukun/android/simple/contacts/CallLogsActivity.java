@@ -16,6 +16,7 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 public class CallLogsActivity extends ListActivity {
+	@SuppressWarnings("unused")
 	private static final String TAG = "CallLogsActivity";
 	private static final String[] CALL_TYPE_NAME={"接听","打出","未接"};
 	private static final int[] CALL_TYPE_BGCOLOR={Color.BLUE,Color.GREEN,Color.RED};
@@ -56,7 +57,7 @@ public class CallLogsActivity extends ListActivity {
 		}
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			View view = mInflater.inflate(R.layout.calllog_item, null);  
+			View view = mInflater.inflate(R.layout.item_calllogs_activity, null);  
 	        setChildView(view, cursor);  
 	        return view; 
 		}
